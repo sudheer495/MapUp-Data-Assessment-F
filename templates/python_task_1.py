@@ -1,92 +1,55 @@
 import pandas as pd
+df = pd.read_csv("dataset-1.csv")
 
+# Create a new DataFrame with id_1 as index and id_2 as columns
+result_df = pd.pivot_table(df, values='car', index='id_1', columns='id_2', fill_value=0)
 
-def generate_car_matrix(df)->pd.DataFrame:
-    """
-    Creates a DataFrame  for id combinations.
+# Set diagonal values to 0
+result_df.values[[range(len(result_df))]*2]
 
-    Args:
-        df (pandas.DataFrame)
+# Display the resulting DataFrame
+print(result_df)
 
-    Returns:
-        pandas.DataFrame: Matrix generated with 'car' values, 
-                          where 'id_1' and 'id_2' are used as indices and columns respectively.
-    """
-    # Write your logic here
+import pandas as pd
+def get_type_count(df) -> dict:
+    def categorize_car_type(value):
+        if value <= 15:
+            return 'low'
+        elif value <= 25:
+            return 'medium'
+        else:
+            return 'high'
 
-    return df
+    df['car_type'] = df['car'].apply(categorize_car_type)
+    type_counts = dict(df['car_type'].value_counts())
 
+    return type_counts
 
-def get_type_count(df)->dict:
-    """
-    Categorizes 'car' values into types and returns a dictionary of counts.
+df = pd.read_csv("dataset-1.csv")
+car_type_counts = get_type_count(df)
+print(car_type_counts)
 
-    Args:
-        df (pandas.DataFrame)
+import pandas as pd
+def get_bus_indexes(df):
+    
+    mean_bus = df['bus'].mean()
+    indices = df.index[df['bus'] > 2 * mean_bus].tolist()
+    indices.sort()
+    return indices
 
-    Returns:
-        dict: A dictionary with car types as keys and their counts as values.
-    """
-    # Write your logic here
+df = pd.read_csv("dataset-1.csv")
+result_indices = get_bus_indexes(df)
+print(result_indices)
 
-    return dict()
+import pandas as pd
+def filter_routes(df) -> list:
 
+    mean_truck_by_route = df.groupby('route')['truck'].mean()
+    filtered_routes = mean_truck_by_route[mean_truck_by_route > 7].index.tolist()
+    filtered_routes.sort()
 
-def get_bus_indexes(df)->list:
-    """
-    Returns the indexes where the 'bus' values are greater than twice the mean.
+    return filtered_routes
 
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        list: List of indexes where 'bus' values exceed twice the mean.
-    """
-    # Write your logic here
-
-    return list()
-
-
-def filter_routes(df)->list:
-    """
-    Filters and returns routes with average 'truck' values greater than 7.
-
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        list: List of route names with average 'truck' values greater than 7.
-    """
-    # Write your logic here
-
-    return list()
-
-
-def multiply_matrix(matrix)->pd.DataFrame:
-    """
-    Multiplies matrix values with custom conditions.
-
-    Args:
-        matrix (pandas.DataFrame)
-
-    Returns:
-        pandas.DataFrame: Modified matrix with values multiplied based on custom conditions.
-    """
-    # Write your logic here
-
-    return matrix
-
-
-def time_check(df)->pd.Series:
-    """
-    Use shared dataset-2 to verify the completeness of the data by checking whether the timestamps for each unique (`id`, `id_2`) pair cover a full 24-hour and 7 days period
-
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        pd.Series: return a boolean series
-    """
-    # Write your logic here
-
-    return pd.Series()
+df = pd.read_csv("dataset-1.csv")
+result_routes = filter_routes(df)
+print(result_routes)
